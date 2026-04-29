@@ -305,3 +305,45 @@ footer.site a {
   border-bottom: none;
 }
 footer.site a:hover { color: var(--link-hover); }
+
+/* ---------- Markdown-rendered recon pages ---------- */
+.markdown-body table {
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+  width: 100%;
+}
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  text-align: left;
+}
+.markdown-body th {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-bright);
+  font-family: var(--serif);
+  letter-spacing: 1px;
+}
+.markdown-body tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}
+.markdown-body code {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-size: 12px;
+}
+.markdown-body ul {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.markdown-body h1 {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  margin-top: 28px;
+}
+.markdown-body h2 {
+  margin-top: 24px;
+  color: var(--text-bright);
+}

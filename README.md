@@ -25,6 +25,15 @@ Static HTML documentation for the [Black Souls II Mod Loader](https://github.com
 | [Templates](https://dazashu.github.io/Black-Souls-II-docs/pages/templates.html) | Walkthroughs of the 5 starter templates |
 | [Asset Extractor](https://dazashu.github.io/Black-Souls-II-docs/pages/asset-extractor.html) | Extracting and repacking `Game.rgss3a` |
 | [How It Works](https://dazashu.github.io/Black-Souls-II-docs/pages/how-it-works.html) | Archive patching, Marshal injection, runtime eval |
+| [Script Index](https://dazashu.github.io/Black-Souls-II-docs/pages/script-index.html) | Recon dump: all 224 BS2 scripts in load order |
+| [Class Reference](https://dazashu.github.io/Black-Souls-II-docs/pages/class-reference.html) | Recon dump: every class/module mapped to its defining script |
+
+The two recon files are also viewable as raw markdown on GitHub:
+
+- [`recon/INDEX.md`](recon/INDEX.md) — script index
+- [`recon/DOCUMENTATION.md`](recon/DOCUMENTATION.md) — class reference
+
+These are auto-generated from `Game.rgss3a` by `recon.py` in the [Mod Loader](https://github.com/dazashu/Black-Souls-II-Mod-Loader) repo. The decompiled `.rb` source files themselves are **not** redistributed — run `recon.py` against your own copy of the game to produce them.
 
 ---
 
@@ -36,14 +45,19 @@ Black-Souls-II-docs/
 ├── _config.yml          disables Jekyll preprocessing
 ├── index.html           landing page (tile grid)
 ├── style.css            dark-fantasy theme
-└── pages/
-    ├── installation.html
-    ├── creating-mods.html
-    ├── asset-overrides.html
-    ├── api-reference.html
-    ├── templates.html
-    ├── asset-extractor.html
-    └── how-it-works.html
+├── pages/
+│   ├── installation.html
+│   ├── creating-mods.html
+│   ├── asset-overrides.html
+│   ├── api-reference.html
+│   ├── templates.html
+│   ├── asset-extractor.html
+│   ├── how-it-works.html
+│   ├── script-index.html      ── client-side renders recon/INDEX.md
+│   └── class-reference.html   ── client-side renders recon/DOCUMENTATION.md
+└── recon/
+    ├── INDEX.md             auto-generated script catalog
+    └── DOCUMENTATION.md     auto-generated class/method reference
 ```
 
 ---

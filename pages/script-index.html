@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Script Index — Black Souls Mod Loader</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>BLACK SOULS MOD LOADER</h1>
+  <p class="subtitle">— a vessel for many hands —</p>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <h2>Overview</h2>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="how-it-works.html">How it works</a></li>
+    </ul>
+    <h2>Mod Authoring</h2>
+    <ul>
+      <li><a href="creating-mods.html">Creating mods</a></li>
+      <li><a href="asset-overrides.html">Asset overrides</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API reference</a></li>
+    </ul>
+    <h2>Recon</h2>
+    <ul>
+      <li><a href="script-index.html" class="active">Script index</a></li>
+      <li><a href="class-reference.html">Class reference</a></li>
+    </ul>
+    <h2>Tools</h2>
+    <ul>
+      <li><a href="asset-extractor.html">Asset Extractor</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <h1>Script index</h1>
+    <p class="lede">A line-by-line catalog of every Ruby script the game ships with — 224 entries, ordered the way <code>RGSS3</code> loads them at boot.</p>
+
+    <h2>What this is</h2>
+    <p>
+      <code>Scripts.rvdata2</code> inside <code>Game.rgss3a</code> contains every script the game runs:
+      vanilla RGSS3 classes (<code>Game_Actor</code>, <code>Scene_Map</code>, …), plus dozens of
+      BS2-specific add-ons (custom battle systems, scene scripts, asset hooks, gameplay tweaks).
+      <code>recon.py</code> decompresses and serializes them all into a clean numbered list.
+    </p>
+
+    <h2>How to use it</h2>
+    <ul>
+      <li><strong>Locating a class:</strong> Jump down the table to find which numbered script defines the class you want to monkey-patch. The script number is the load order — anything you alias from a higher-numbered script will run after that script's definitions.</li>
+      <li><strong>Mod compatibility:</strong> If two mods both touch <code>Game_Battler</code>, knowing the script that originally defined it tells you what shape to expect (the BS2 patches in scripts 100+ heavily extend the vanilla 020 <code>Game_Battler</code>).</li>
+      <li><strong>Cross-reference:</strong> Pair this with the <a href="class-reference.html">Class reference</a> for class → script lookups in the other direction.</li>
+    </ul>
+
+    <h2>Regenerating</h2>
+    <p>
+      The list below is a frozen snapshot. To regenerate it from your own copy of the game:
+    </p>
+<pre><code>cd "Mod Loader/src"
+python recon.py</code></pre>
+    <p>
+      Output: <code>docs/recon/INDEX.md</code> (this file) plus <code>docs/recon/scripts/*.rb</code>
+      with the actual decompressed Ruby for every entry. The <code>.rb</code> sources are
+      <em>not</em> shipped in this repo — run <code>recon.py</code> against your own
+      <code>Game.rgss3a</code> to produce them.
+    </p>
+
+    <hr>
+
+    <div id="md-content" class="markdown-body">
+      <p><em>Loading script index…</em></p>
+    </div>
+
+  </main>
+
+</div>
+
+<footer class="site">
+  Black Souls Mod Loader · MIT License
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  fetch('../recon/INDEX.md')
+    .then(r => {
+      if (!r.ok) throw new Error('fetch failed: ' + r.status);
+      return r.text();
+    })
+    .then(md => {
+      document.getElementById('md-content').innerHTML = marked.parse(md);
+    })
+    .catch(err => {
+      document.getElementById('md-content').innerHTML =
+        '<p><em>Could not load INDEX.md (' + err.message + '). ' +
+        'View it directly on <a href="https://github.com/dazashu/Black-Souls-II-docs/blob/main/recon/INDEX.md">GitHub</a>.</em></p>';
+    });
+</script>
+
+</body>
+</html>
