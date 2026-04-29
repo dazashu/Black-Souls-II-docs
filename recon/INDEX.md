@@ -1,4 +1,4 @@
-# Black Souls II — Script Index
+# Black Souls II - Script Index
 
 224 script entries extracted from `Scripts.rvdata2`.
 Sorted by script-order (the order RGSS3 loads them at boot).

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Installation — Black Souls Mod Loader</title>
+  <title>Installation - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -42,18 +42,18 @@
 
   <main class="content">
     <h1>Installation</h1>
-    <p class="lede">Two routes — pre-built executable for end users, build-from-source for developers.</p>
+    <p class="lede">Two routes - pre-built executable for end users, build-from-source for developers.</p>
 
-    <h2>Option A — pre-built executable</h2>
+    <h2>Option A - pre-built executable</h2>
     <p>Recommended for most users.</p>
 
     <ol>
       <li>Go to the project's GitHub <strong>Releases</strong> page.</li>
       <li>Download <code>BlackSoulsModLoader.exe</code>.</li>
-      <li>Run it. Windows may flag it as "unknown publisher" — click <em>More info → Run anyway</em>.
+      <li>Run it. Windows may flag it as "unknown publisher" - click <em>More info → Run anyway</em>.
           The exe is unsigned because PyInstaller binaries don't ship with a signing certificate.</li>
       <li>In the GUI, click <strong>Browse</strong> next to <em>Game folder</em> and pick your
-          <code>BLACK SOULS II</code> folder — the one containing <code>Game.exe</code> and
+          <code>BLACK SOULS II</code> folder - the one containing <code>Game.exe</code> and
           <code>Game.rgss3a</code>.</li>
       <li>Click <strong>Install / Update</strong>. The status line should turn green and read
           <em>archive XXX MB · LOADER INSTALLED · backup: yes</em>.</li>
@@ -71,7 +71,7 @@
       </p>
     </div>
 
-    <h2>Option B — build from source</h2>
+    <h2>Option B - build from source</h2>
     <p>For developers, contributors, or anyone modifying the loader itself.</p>
 
     <h3>Requirements</h3>
@@ -99,7 +99,7 @@ pyinstaller --noconfirm --clean --onefile --windowed \
     </p>
 
     <p>
-      A convenience <code>build.bat</code> runs the exact same command — on Windows you can
+      A convenience <code>build.bat</code> runs the exact same command - on Windows you can
       double-click it instead of typing the PyInstaller invocation.
     </p>
 
@@ -119,7 +119,7 @@ python mod_loader_gui.py</code></pre>
     </ul>
     <p>
       Both restore <code>Game.rgss3a</code> from <code>Game.rgss3a.original.bak</code>. Your
-      <code>BLACK SOULS II/Mods/</code> folder is preserved — uninstalling only reverts the patch,
+      <code>BLACK SOULS II/Mods/</code> folder is preserved - uninstalling only reverts the patch,
       not your installed mods.
     </p>
 
@@ -128,7 +128,7 @@ python mod_loader_gui.py</code></pre>
     <h3>The status line says "NOT a valid game folder"</h3>
     <p>
       The folder you picked doesn't contain <code>Game.rgss3a</code>. Common cause: you picked
-      the parent folder. Open the folder you selected — if you see <code>Game.exe</code> alongside,
+      the parent folder. Open the folder you selected - if you see <code>Game.exe</code> alongside,
       you're in the right place. If <code>Game.exe</code> is in a subfolder, pick that subfolder
       instead.
     </p>
@@ -136,13 +136,13 @@ python mod_loader_gui.py</code></pre>
     <h3>The game won't start after install</h3>
     <p>
       Run the uninstaller to restore the backup. If the game starts again from the backup, the
-      patch was the cause — file a bug report with whatever error message the game showed.
+      patch was the cause - file a bug report with whatever error message the game showed.
     </p>
 
     <h3>I see no MessageBox at startup, mods don't load</h3>
     <p>
       Check <code>%TEMP%/bs_modloader.log</code> and <code>BLACK SOULS II/Mods/_loader.log</code>
-      for entries. If both are empty, the patch may not have taken effect — re-run the installer
+      for entries. If both are empty, the patch may not have taken effect - re-run the installer
       and try again. If the log says <code>No Mods/ directory found</code>, create
       <code>BLACK SOULS II/Mods/</code> manually.
     </p>

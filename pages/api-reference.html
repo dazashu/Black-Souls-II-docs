@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Reference — Black Souls Mod Loader</title>
+  <title>API Reference - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -74,7 +74,7 @@
 # or nil if no mod claims it</code></pre>
 
     <h3><code>ModLoader.asset_overrides</code></h3>
-    <p>The full hash of <code>relative_path =&gt; absolute_path</code>. Read-only — don't mutate.</p>
+    <p>The full hash of <code>relative_path =&gt; absolute_path</code>. Read-only - don't mutate.</p>
 
     <hr>
 
@@ -93,7 +93,7 @@
         <tr><td><code>gain_gold(n)</code></td><td>Add <code>n</code>. Negative subtracts.</td></tr>
         <tr><td><code>lose_gold(n)</code></td><td>Subtract <code>n</code>.</td></tr>
         <tr><td><code>gain_item(item, n)</code></td><td><code>item</code> is an RPG::Item / Weapon / Armor.</td></tr>
-        <tr><td><code>lose_item(item, n)</code></td><td>—</td></tr>
+        <tr><td><code>lose_item(item, n)</code></td><td>-</td></tr>
         <tr><td><code>item_number(item)</code></td><td>How many of that item we own.</td></tr>
         <tr><td><code>add_actor(id) / remove_actor(id)</code></td><td>Modify roster.</td></tr>
       </tbody>
@@ -108,7 +108,7 @@
         <tr><td><code>direction</code></td><td>2 down / 4 left / 6 right / 8 up.</td></tr>
         <tr><td><code>reserve_transfer(map_id, x, y, dir)</code></td><td>Teleport to another map.</td></tr>
         <tr><td><code>@through</code> (ivar)</td><td>Set true to walk through walls. BS2 strips the public setter; use <code>$game_player.instance_variable_set(:@through, true)</code>.</td></tr>
-        <tr><td><code>increase_steps</code></td><td>Hooked by the <code>01_simple_ruby</code> template — runs on every move.</td></tr>
+        <tr><td><code>increase_steps</code></td><td>Hooked by the <code>01_simple_ruby</code> template - runs on every move.</td></tr>
       </tbody>
     </table>
 
@@ -129,18 +129,18 @@
     <h3><code>$data_*</code></h3>
     <p>The database arrays. 1-indexed (entry 0 is nil).</p>
     <ul>
-      <li><code>$data_items</code> — RPG::Item (consumables, key items)</li>
-      <li><code>$data_weapons</code> — RPG::Weapon</li>
-      <li><code>$data_armors</code> — RPG::Armor</li>
-      <li><code>$data_skills</code> — RPG::Skill</li>
-      <li><code>$data_enemies</code> — RPG::Enemy</li>
-      <li><code>$data_classes</code> — RPG::Class</li>
-      <li><code>$data_states</code> — RPG::State</li>
-      <li><code>$data_actors</code> — RPG::Actor</li>
-      <li><code>$data_troops</code> — RPG::Troop</li>
-      <li><code>$data_mapinfos</code> — Hash <code>{map_id =&gt; RPG::MapInfo}</code></li>
-      <li><code>$data_system</code> — RPG::System (game title, switches/variables names, sounds, etc.)</li>
-      <li><code>$data_common_events</code> — Array of common events</li>
+      <li><code>$data_items</code> - RPG::Item (consumables, key items)</li>
+      <li><code>$data_weapons</code> - RPG::Weapon</li>
+      <li><code>$data_armors</code> - RPG::Armor</li>
+      <li><code>$data_skills</code> - RPG::Skill</li>
+      <li><code>$data_enemies</code> - RPG::Enemy</li>
+      <li><code>$data_classes</code> - RPG::Class</li>
+      <li><code>$data_states</code> - RPG::State</li>
+      <li><code>$data_actors</code> - RPG::Actor</li>
+      <li><code>$data_troops</code> - RPG::Troop</li>
+      <li><code>$data_mapinfos</code> - Hash <code>{map_id =&gt; RPG::MapInfo}</code></li>
+      <li><code>$data_system</code> - RPG::System (game title, switches/variables names, sounds, etc.)</li>
+      <li><code>$data_common_events</code> - Array of common events</li>
     </ul>
 
     <h3><code>SceneManager</code></h3>
@@ -180,7 +180,7 @@ end</code></pre>
 
     <h2>Class / method discovery</h2>
     <p>
-      Don't memorize the BS2 class hierarchy — generate it. The recon tool dumps every script
+      Don't memorize the BS2 class hierarchy - generate it. The recon tool dumps every script
       in the game and produces an auto-indexed reference:
     </p>
 <pre><code>cd "Mod Loader/src"

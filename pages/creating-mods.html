@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Creating Mods — Black Souls Mod Loader</title>
+  <title>Creating Mods - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -52,16 +52,16 @@
     </p>
 <pre><code>Mods/
 └── my_first_mod/
-    ├── main.rb               required — the mod's entry point
-    ├── manifest.txt          optional — pure metadata
-    └── assets/               optional — graphic / audio / data overrides
+    ├── main.rb               required - the mod's entry point
+    ├── manifest.txt          optional - pure metadata
+    └── assets/               optional - graphic / audio / data overrides
         ├── Graphics/
         │   └── Faces/Custom.png
         └── Audio/
             └── BGM/title.ogg</code></pre>
 
     <p>
-      The mod's folder name is what shows up in logs and load order — keep it descriptive
+      The mod's folder name is what shows up in logs and load order - keep it descriptive
       and ASCII-safe. Folders starting with <code>_</code> or <code>.</code> are skipped.
     </p>
 
@@ -97,13 +97,13 @@ ModLoader.log("[my_mod] hooked Game_Player#increase_steps") rescue nil</code></p
     </p>
     <ul>
       <li>Use a unique alias prefix (e.g. <code>_my_</code>) so you don't collide with another mod that hooks the same method.</li>
-      <li>Always call the aliased original — otherwise you replace base behavior, not extend it.</li>
+      <li>Always call the aliased original - otherwise you replace base behavior, not extend it.</li>
       <li>Wrap risky operations in <code>rescue nil</code>. If your mod throws, the loader catches it, but the rest of the game shouldn't be left in a half-modified state.</li>
     </ul>
 
     <h2>Tweaking the database</h2>
     <p>
-      The game's data tables are exposed as global arrays — <code>$data_items</code>,
+      The game's data tables are exposed as global arrays - <code>$data_items</code>,
       <code>$data_weapons</code>, <code>$data_armors</code>, <code>$data_skills</code>,
       <code>$data_enemies</code>, <code>$data_classes</code>, <code>$data_states</code>,
       <code>$data_actors</code>, <code>$data_troops</code>. They're all 1-indexed (entry 0 is nil).
@@ -151,7 +151,7 @@ class Scene_Map
 end</code></pre>
 
     <p>
-      For a more complete example see the <code>05_scene_hook</code> template — it adds a
+      For a more complete example see the <code>05_scene_hook</code> template - it adds a
       cleanup step in <code>terminate</code> so the sprite is disposed properly when leaving
       the map.
     </p>
@@ -159,7 +159,7 @@ end</code></pre>
     <h2>Replacing assets</h2>
     <p>
       For graphic / audio / data file replacement, you don't need any Ruby code at all.
-      See the <a href="asset-overrides.html">Asset Overrides</a> page — drop a PNG into
+      See the <a href="asset-overrides.html">Asset Overrides</a> page - drop a PNG into
       <code>assets/Graphics/Faces/</code> and you're done.
     </p>
 

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Script Index — Black Souls Mod Loader</title>
+  <title>Script Index - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -42,7 +42,7 @@
 
   <main class="content">
     <h1>Script index</h1>
-    <p class="lede">A line-by-line catalog of every Ruby script the game ships with — 224 entries, ordered the way <code>RGSS3</code> loads them at boot.</p>
+    <p class="lede">A line-by-line catalog of every Ruby script the game ships with - 224 entries, ordered the way <code>RGSS3</code> loads them at boot.</p>
 
     <h2>What this is</h2>
     <p>
@@ -54,7 +54,7 @@
 
     <h2>How to use it</h2>
     <ul>
-      <li><strong>Locating a class:</strong> Jump down the table to find which numbered script defines the class you want to monkey-patch. The script number is the load order — anything you alias from a higher-numbered script will run after that script's definitions.</li>
+      <li><strong>Locating a class:</strong> Jump down the table to find which numbered script defines the class you want to monkey-patch. The script number is the load order - anything you alias from a higher-numbered script will run after that script's definitions.</li>
       <li><strong>Mod compatibility:</strong> If two mods both touch <code>Game_Battler</code>, knowing the script that originally defined it tells you what shape to expect (the BS2 patches in scripts 100+ heavily extend the vanilla 020 <code>Game_Battler</code>).</li>
       <li><strong>Cross-reference:</strong> Pair this with the <a href="class-reference.html">Class reference</a> for class → script lookups in the other direction.</li>
     </ul>
@@ -68,7 +68,7 @@ python recon.py</code></pre>
     <p>
       Output: <code>docs/recon/INDEX.md</code> (this file) plus <code>docs/recon/scripts/*.rb</code>
       with the actual decompressed Ruby for every entry. The <code>.rb</code> sources are
-      <em>not</em> shipped in this repo — run <code>recon.py</code> against your own
+      <em>not</em> shipped in this repo - run <code>recon.py</code> against your own
       <code>Game.rgss3a</code> to produce them.
     </p>
 

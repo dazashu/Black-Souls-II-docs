@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Class Reference — Black Souls Mod Loader</title>
+  <title>Class Reference - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -42,7 +42,7 @@
 
   <main class="content">
     <h1>Class reference</h1>
-    <p class="lede">Auto-generated map of every class, module, method, and constant the live game defines — and which numbered script defines each one.</p>
+    <p class="lede">Auto-generated map of every class, module, method, and constant the live game defines - and which numbered script defines each one.</p>
 
     <h2>What this is</h2>
     <p>
@@ -51,24 +51,24 @@
       tuples showing every script that defines, extends, or monkey-patches it.
     </p>
     <p>
-      A class that appears in many script entries — <code>Game_Battler</code>, <code>Game_Interpreter</code>,
-      <code>Window_Base</code> — is one with heavy BS2 customization. The vanilla RGSS3 definition is in
+      A class that appears in many script entries - <code>Game_Battler</code>, <code>Game_Interpreter</code>,
+      <code>Window_Base</code> - is one with heavy BS2 customization. The vanilla RGSS3 definition is in
       one of the low-numbered scripts; the rest are BS2's mods on top.
     </p>
 
     <h2>How to use it</h2>
     <ul>
       <li><strong>Pick a class to monkey-patch:</strong> Look up the class name to see every script that touches it. If your mod aliases a method, you're chaining onto whichever script ran last.</li>
-      <li><strong>Avoid name collisions:</strong> When choosing a name for a new class, scan this file first — names like <code>Heat_Haze</code>, <code>Brain_Noise</code>, <code>Ancient_Light</code> already exist as BS2 effect classes.</li>
+      <li><strong>Avoid name collisions:</strong> When choosing a name for a new class, scan this file first - names like <code>Heat_Haze</code>, <code>Brain_Noise</code>, <code>Ancient_Light</code> already exist as BS2 effect classes.</li>
       <li><strong>Find feature implementations:</strong> The Japanese script titles map directly to features (e.g. <code>'スキル忘れ'</code> = "Skill Forget", <code>'ターン消費無し'</code> = "No Turn Cost"). Drop the title into a search to find the script that implements that mechanic.</li>
     </ul>
 
     <h2>Note on the BS2-flavored definitions section</h2>
     <p>
       The first part of the document, <strong>"BS2-flavored definitions"</strong>, is a heuristic
-      pass — it lists names matching keywords like <code>black</code>, <code>soul</code>, <code>bs</code>,
+      pass - it lists names matching keywords like <code>black</code>, <code>soul</code>, <code>bs</code>,
       <code>kuro</code>, <code>alice</code> as a starting point for finding game-specific (vs.
-      vanilla RGSS3) classes. It's a hint, not exhaustive — many BS2 classes don't match those keywords.
+      vanilla RGSS3) classes. It's a hint, not exhaustive - many BS2 classes don't match those keywords.
     </p>
 
     <h2>Regenerating</h2>

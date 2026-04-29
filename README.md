@@ -6,15 +6,15 @@ Static HTML documentation for the [Black Souls II Mod Loader](https://github.com
 
 ## Companion repos
 
-- 🔧 [Black-Souls-II-Mod-Loader](https://github.com/dazashu/Black-Souls-II-Mod-Loader) — runtime mod loader
-- 🧩 [Black-Souls-II-Mod](https://github.com/dazashu/Black-Souls-II-Mod) — bundled mods (`creative_mode` + 5 starter templates)
-- 📦 [Black-Souls-II-Asset-Extractor](https://github.com/dazashu/Black-Souls-II-Asset-Extractor) — extract / repack `Game.rgss3a`
+- 🔧 [Black-Souls-II-Mod-Loader](https://github.com/dazashu/Black-Souls-II-Mod-Loader) - runtime mod loader
+- 🧩 [Black-Souls-II-Mod](https://github.com/dazashu/Black-Souls-II-Mod) - bundled mods (`creative_mode` + 5 starter templates)
+- 📦 [Black-Souls-II-Asset-Extractor](https://github.com/dazashu/Black-Souls-II-Asset-Extractor) - extract / repack `Game.rgss3a`
 
 ---
 
 ## What's covered
 
-> These are pages on the live site. Clicking them on GitHub would open the HTML source — use these links to view the rendered docs.
+> These are pages on the live site. Clicking them on GitHub would open the HTML source - use these links to view the rendered docs.
 
 | Page | Topic |
 |---|---|
@@ -30,10 +30,10 @@ Static HTML documentation for the [Black Souls II Mod Loader](https://github.com
 
 The two recon files are also viewable as raw markdown on GitHub:
 
-- [`recon/INDEX.md`](recon/INDEX.md) — script index
-- [`recon/DOCUMENTATION.md`](recon/DOCUMENTATION.md) — class reference
+- [`recon/INDEX.md`](recon/INDEX.md) - script index
+- [`recon/DOCUMENTATION.md`](recon/DOCUMENTATION.md) - class reference
 
-These are auto-generated from `Game.rgss3a` by `recon.py` in the [Mod Loader](https://github.com/dazashu/Black-Souls-II-Mod-Loader) repo. The decompiled `.rb` source files themselves are **not** redistributed — run `recon.py` against your own copy of the game to produce them.
+These are auto-generated from `Game.rgss3a` by `recon.py` in the [Mod Loader](https://github.com/dazashu/Black-Souls-II-Mod-Loader) repo. The decompiled `.rb` source files themselves are **not** redistributed - run `recon.py` against your own copy of the game to produce them.
 
 ---
 
@@ -71,7 +71,7 @@ Black-Souls-II-docs/
 
 Your site goes live at `https://<your-username>.github.io/Black-Souls-II-docs/` within a minute or two.
 
-`_config.yml` disables Jekyll so the HTML is served as-is — no build step.
+`_config.yml` disables Jekyll so the HTML is served as-is - no build step.
 
 ---
 

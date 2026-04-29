@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asset Extractor — Black Souls Mod Loader</title>
+  <title>Asset Extractor - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -51,14 +51,14 @@
 
     <h2>When to use this tool</h2>
     <ul>
-      <li><strong>Browsing original assets</strong> — extract the archive once, then browse the output to find the exact filename of any graphic / data file.</li>
-      <li><strong>Translating</strong> — extract <code>.rvdata2</code> files, edit them with <code>rvpacker</code> or RPG Maker VX Ace, then repack.</li>
-      <li><strong>Permanent asset replacement</strong> — for cases where the Mod Loader's runtime asset overrides aren't enough, or where you want to ship a single replacement archive instead of a mod folder.</li>
+      <li><strong>Browsing original assets</strong> - extract the archive once, then browse the output to find the exact filename of any graphic / data file.</li>
+      <li><strong>Translating</strong> - extract <code>.rvdata2</code> files, edit them with <code>rvpacker</code> or RPG Maker VX Ace, then repack.</li>
+      <li><strong>Permanent asset replacement</strong> - for cases where the Mod Loader's runtime asset overrides aren't enough, or where you want to ship a single replacement archive instead of a mod folder.</li>
     </ul>
 
     <div class="note">
       <strong>For most asset mods, the Mod Loader's runtime overrides are simpler.</strong>
-      Drop a PNG into <code>Mods/&lt;your_mod&gt;/assets/Graphics/Faces/</code> and you're done —
+      Drop a PNG into <code>Mods/&lt;your_mod&gt;/assets/Graphics/Faces/</code> and you're done -
       no extraction or repacking required. See the <a href="asset-overrides.html">Asset overrides</a>
       page.
     </div>
@@ -66,8 +66,8 @@
     <h2>Extract</h2>
     <ol>
       <li>Click <strong>Browse</strong> next to <em>Game folder</em> and pick your <code>BLACK SOULS II</code> folder.</li>
-      <li>Click <strong>Browse</strong> next to <em>Output folder</em> and pick where to dump everything (an empty folder is best — the extractor doesn't clean up between runs).</li>
-      <li>Click <strong>EXTRACT ALL</strong>. Wait a few seconds — there are ~2,500 files in the archive.</li>
+      <li>Click <strong>Browse</strong> next to <em>Output folder</em> and pick where to dump everything (an empty folder is best - the extractor doesn't clean up between runs).</li>
+      <li>Click <strong>EXTRACT ALL</strong>. Wait a few seconds - there are ~2,500 files in the archive.</li>
     </ol>
 
     <p>Output is sorted by the archive's own layout:</p>
@@ -92,7 +92,7 @@
     └── ...                       (~2166 files total)</code></pre>
 
     <p>
-      The extractor never touches the original archive — it reads, decrypts, and writes to the
+      The extractor never touches the original archive - it reads, decrypts, and writes to the
       output folder only. You can safely run it as many times as you like.
     </p>
 
@@ -106,13 +106,13 @@
         <br><strong>Example:</strong> if you edited <code>Graphics/Faces/Alice.png</code> from the extract, your replacement folder should contain it at the same relative path.</li>
       <li>In the GUI, click <strong>Browse</strong> next to <em>Replacements folder</em> and pick that folder.</li>
       <li>Click <strong>Browse</strong> next to <em>Output archive</em> and pick a destination filename
-        (e.g. <code>Game.rgss3a.modded</code>). <strong>Don't overwrite the original yet</strong> — keep your original safe until you've tested the modded one.</li>
+        (e.g. <code>Game.rgss3a.modded</code>). <strong>Don't overwrite the original yet</strong> - keep your original safe until you've tested the modded one.</li>
       <li>Click <strong>REPACK</strong>.</li>
     </ol>
 
     <p>
       The log will report how many files were matched (replaced) and how many were unmatched
-      (path didn't correspond to anything in the archive — usually a typo on your end). Files
+      (path didn't correspond to anything in the archive - usually a typo on your end). Files
       not in your replacement folder pass through unchanged from the original.
     </p>
 
@@ -124,7 +124,7 @@
 
     <div class="warn">
       If you've already installed the Mod Loader, the modded archive must replace the
-      <em>patched</em> one — and the Mod Loader's automatic backup at
+      <em>patched</em> one - and the Mod Loader's automatic backup at
       <code>Game.rgss3a.original.bak</code> will be from BEFORE your repack. Re-running the
       Mod Loader installer will re-derive from that backup, undoing your repack. If you want
       both, use <a href="asset-overrides.html">runtime asset overrides</a> instead.

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Templates — Black Souls Mod Loader</title>
+  <title>Templates - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -46,11 +46,11 @@
 
     <p>
       The templates ship under <code>Mods/Mod Template/</code> in the Mod Loader repo. Each is
-      a self-contained, working mod — copy it into <code>BLACK SOULS II/Mods/&lt;new_name&gt;/</code>
+      a self-contained, working mod - copy it into <code>BLACK SOULS II/Mods/&lt;new_name&gt;/</code>
       to use, or read it as a reference.
     </p>
 
-    <h2>01 — Simple Ruby</h2>
+    <h2>01 - Simple Ruby</h2>
     <p>
       The minimum viable mod: alias a vanilla method, call the original, add behavior.
     </p>
@@ -71,9 +71,9 @@ end
 ModLoader.log("[01_simple_ruby] hooked Game_Player#increase_steps") rescue nil</code></pre>
     <p><strong>When to use this pattern:</strong> any time you want to add behavior to an existing game class without breaking what's already there.</p>
 
-    <h2>02 — Asset override</h2>
+    <h2>02 - Asset override</h2>
     <p>
-      A pure asset mod — no Ruby logic, just files in <code>assets/</code>.
+      A pure asset mod - no Ruby logic, just files in <code>assets/</code>.
     </p>
 <pre><code>Mods/&lt;your_mod&gt;/
 ├── main.rb                    can be empty (or just an info log)
@@ -84,10 +84,10 @@ ModLoader.log("[01_simple_ruby] hooked Game_Player#increase_steps") rescue nil</
         └── BGM/title.ogg      replaces the original</code></pre>
     <p>See the <a href="asset-overrides.html">Asset overrides</a> page for the full list of supported folders.</p>
 
-    <h2>03 — Data tweak</h2>
+    <h2>03 - Data tweak</h2>
     <p>
       Mutate the database arrays at runtime. The change applies for the rest of the session
-      and goes away when the game closes — no save corruption.
+      and goes away when the game closes - no save corruption.
     </p>
     <p>
       <strong>What it does:</strong> makes every consumable cost 1 soul and heal full HP.
@@ -106,7 +106,7 @@ ModLoader.log("[03_data_tweak] juiced consumables") rescue nil</code></pre>
       applies for the play session.
     </p>
 
-    <h2>04 — Custom scene</h2>
+    <h2>04 - Custom scene</h2>
     <p>
       Add a brand-new in-game screen with its own command window. The template binds it to
       <strong>F3</strong> on the map.
@@ -137,12 +137,12 @@ class Scene_HelloHello &lt; Scene_MenuBase
   end
 end</code></pre>
     <p>
-      <strong>When to use this pattern:</strong> any standalone tool that needs its own UI —
+      <strong>When to use this pattern:</strong> any standalone tool that needs its own UI -
       stat editors, item spawners, debug menus. The bundled <code>creative_mode</code> mod is a
       large-scale example of this pattern.
     </p>
 
-    <h2>05 — Scene hook</h2>
+    <h2>05 - Scene hook</h2>
     <p>
       Hook into an existing scene's lifecycle (<code>start</code> / <code>update</code> /
       <code>terminate</code>) to add overlays, intercept input, or react to scene transitions.

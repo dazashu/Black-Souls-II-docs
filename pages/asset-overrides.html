@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asset Overrides — Black Souls Mod Loader</title>
+  <title>Asset Overrides - Black Souls Mod Loader</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
 <header class="site">
   <h1>BLACK SOULS MOD LOADER</h1>
-  <p class="subtitle">— a vessel for many hands —</p>
+  <p class="subtitle">- a vessel for many hands -</p>
 </header>
 
 <div class="layout">
@@ -80,11 +80,11 @@
       Asset names in BS2 match what's in <code>Game.rgss3a</code>. To browse them:
     </p>
     <ol>
-      <li>Run the <a href="asset-extractor.html">Asset Extractor</a> — pick your game folder, pick an output folder, click <strong>EXTRACT ALL</strong>.</li>
+      <li>Run the <a href="asset-extractor.html">Asset Extractor</a> - pick your game folder, pick an output folder, click <strong>EXTRACT ALL</strong>.</li>
       <li>Browse the output. The path of any file is exactly the path you'd use in <code>assets/</code>.</li>
     </ol>
     <p>
-      Audio files live <em>outside</em> the archive — they're already loose under
+      Audio files live <em>outside</em> the archive - they're already loose under
       <code>BLACK SOULS II/Audio/</code>, so you can browse them directly without extracting.
     </p>
 
@@ -92,15 +92,15 @@
     <p>Suppose you want to replace Alice's face. The original lives at <code>Graphics/Faces/Alice.png</code> inside the archive. Drop your edited PNG at:</p>
 <pre><code>Mods/my_mod/assets/Graphics/Faces/Alice.png</code></pre>
     <p>
-      Restart the game. Anywhere the game shows Alice's face — menus, dialogue boxes, status
-      windows — your version is shown instead. No Ruby code required.
+      Restart the game. Anywhere the game shows Alice's face - menus, dialogue boxes, status
+      windows - your version is shown instead. No Ruby code required.
     </p>
 
     <h2>Replacing audio</h2>
 <pre><code>Mods/my_mod/assets/Audio/BGM/Theme01.ogg
 Mods/my_mod/assets/Audio/SE/Decision1.ogg</code></pre>
     <p>
-      Same rule — match the path. Supported formats are whatever the game itself supports
+      Same rule - match the path. Supported formats are whatever the game itself supports
       (<code>.ogg</code> mostly, sometimes <code>.mp3</code>).
     </p>
 
@@ -110,7 +110,7 @@ Mods/my_mod/assets/Audio/SE/Decision1.ogg</code></pre>
     </p>
 <pre><code>Mods/my_mod/assets/Data/Items.rvdata2</code></pre>
     <p>
-      For most data tweaks, <strong>runtime mutation</strong> is easier and safer — see the
+      For most data tweaks, <strong>runtime mutation</strong> is easier and safer - see the
       <code>03_data_tweak</code> template under <a href="templates.html">Templates</a>.
     </p>
 
@@ -123,9 +123,9 @@ Mods/my_mod/assets/Audio/SE/Decision1.ogg</code></pre>
     </p>
     <p>The loader then installs three hooks:</p>
     <ul>
-      <li><strong><code>Cache.normal_bitmap</code></strong> — the entry point for all graphics. Checks the override map first, falls back to the archive otherwise.</li>
-      <li><strong><code>Kernel#load_data</code></strong> — used for <code>.rvdata2</code> files. Same pattern.</li>
-      <li><strong><code>Audio.bgm_play</code> / <code>bgs_play</code> / <code>me_play</code> / <code>se_play</code></strong> — same pattern for audio.</li>
+      <li><strong><code>Cache.normal_bitmap</code></strong> - the entry point for all graphics. Checks the override map first, falls back to the archive otherwise.</li>
+      <li><strong><code>Kernel#load_data</code></strong> - used for <code>.rvdata2</code> files. Same pattern.</li>
+      <li><strong><code>Audio.bgm_play</code> / <code>bgs_play</code> / <code>me_play</code> / <code>se_play</code></strong> - same pattern for audio.</li>
     </ul>
     <p>
       Lookups are O(1) hash hits, so there's no measurable performance impact for unmodded

@@ -1,4 +1,4 @@
-/* Black Souls Mod Loader — documentation site theme */
+/* Black Souls Mod Loader - documentation site theme */
 
 :root {
   --bg:        #0c0807;
@@ -59,7 +59,6 @@ header.site h1 {
 header.site .subtitle {
   margin: 6px 0 0;
   color: var(--text-dim);
-  font-style: italic;
   letter-spacing: 1px;
 }
 
@@ -159,7 +158,8 @@ main.content h3 {
 main.content p { margin: 8px 0 14px; }
 main.content ul, main.content ol { padding-left: 24px; }
 main.content li { margin: 4px 0; }
-main.content em { color: var(--text-bright); font-style: italic; }
+em, i { font-style: normal; }
+main.content em { color: var(--text-bright); font-weight: 600; }
 main.content strong { color: var(--text-bright); }
 main.content hr {
   border: none;
@@ -170,7 +170,6 @@ main.content hr {
 /* ---------- Tagline below page H1 ---------- */
 main.content .lede {
   color: var(--text-dim);
-  font-style: italic;
   font-size: 16px;
   margin-bottom: 24px;
 }
@@ -220,7 +219,6 @@ pre code {
   background: rgba(201, 169, 107, 0.04);
   padding: 10px 14px;
   margin: 16px 0;
-  font-style: italic;
   color: var(--text);
 }
 
@@ -230,7 +228,6 @@ pre code {
   padding: 10px 14px;
   margin: 16px 0;
   color: #d8a888;
-  font-style: italic;
 }
 
 /* ---------- Tables ---------- */
