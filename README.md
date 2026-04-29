@@ -14,15 +14,17 @@ Static HTML documentation for the [Black Souls II Mod Loader](https://github.com
 
 ## What's covered
 
+> These are pages on the live site. Clicking them on GitHub would open the HTML source — use these links to view the rendered docs.
+
 | Page | Topic |
 |---|---|
-| [Installation](pages/installation.html) | Install the loader and run your first mod |
-| [Creating Mods](pages/creating-mods.html) | `main.rb`, the mod loader API, common hooks |
-| [Asset Overrides](pages/asset-overrides.html) | Drop-in PNG / OGG / data replacements |
-| [API Reference](pages/api-reference.html) | `ModLoader.*` helpers and registered hooks |
-| [Templates](pages/templates.html) | Walkthroughs of the 5 starter templates |
-| [Asset Extractor](pages/asset-extractor.html) | Extracting and repacking `Game.rgss3a` |
-| [How It Works](pages/how-it-works.html) | Archive patching, Marshal injection, runtime eval |
+| [Installation](https://dazashu.github.io/Black-Souls-II-docs/pages/installation.html) | Install the loader and run your first mod |
+| [Creating Mods](https://dazashu.github.io/Black-Souls-II-docs/pages/creating-mods.html) | `main.rb`, the mod loader API, common hooks |
+| [Asset Overrides](https://dazashu.github.io/Black-Souls-II-docs/pages/asset-overrides.html) | Drop-in PNG / OGG / data replacements |
+| [API Reference](https://dazashu.github.io/Black-Souls-II-docs/pages/api-reference.html) | `ModLoader.*` helpers and registered hooks |
+| [Templates](https://dazashu.github.io/Black-Souls-II-docs/pages/templates.html) | Walkthroughs of the 5 starter templates |
+| [Asset Extractor](https://dazashu.github.io/Black-Souls-II-docs/pages/asset-extractor.html) | Extracting and repacking `Game.rgss3a` |
+| [How It Works](https://dazashu.github.io/Black-Souls-II-docs/pages/how-it-works.html) | Archive patching, Marshal injection, runtime eval |
 
 ---
 
