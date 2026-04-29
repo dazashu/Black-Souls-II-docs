@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creating Mods — Black Souls Mod Loader</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>BLACK SOULS MOD LOADER</h1>
+  <p class="subtitle">— a vessel for many hands —</p>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <h2>Overview</h2>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="how-it-works.html">How it works</a></li>
+    </ul>
+    <h2>Mod Authoring</h2>
+    <ul>
+      <li><a href="creating-mods.html" class="active">Creating mods</a></li>
+      <li><a href="asset-overrides.html">Asset overrides</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API reference</a></li>
+    </ul>
+    <h2>Tools</h2>
+    <ul>
+      <li><a href="asset-extractor.html">Asset Extractor</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <h1>Creating mods</h1>
+    <p class="lede">A mod is a folder containing a Ruby file. That's the entire format.</p>
+
+    <h2>Folder structure</h2>
+    <p>
+      The loader scans <code>BLACK SOULS II/Mods/</code> at startup. Every direct subfolder
+      that contains a <code>main.rb</code> file is treated as a mod and its <code>main.rb</code>
+      is <code>eval</code>'d at the top level.
+    </p>
+<pre><code>Mods/
+└── my_first_mod/
+    ├── main.rb               required — the mod's entry point
+    ├── manifest.txt          optional — pure metadata
+    └── assets/               optional — graphic / audio / data overrides
+        ├── Graphics/
+        │   └── Faces/Custom.png
+        └── Audio/
+            └── BGM/title.ogg</code></pre>
+
+    <p>
+      The mod's folder name is what shows up in logs and load order — keep it descriptive
+      and ASCII-safe. Folders starting with <code>_</code> or <code>.</code> are skipped.
+    </p>
+
+    <h2>The smallest possible mod</h2>
+    <p>One line of Ruby is enough to be a mod:</p>
+<pre><code># Mods/hello_world/main.rb
+ModLoader.log("hello from my first mod")</code></pre>
+    <p>
+      That writes <em>hello from my first mod</em> to <code>%TEMP%/bs_modloader.log</code> at every
+      game launch. Boring, but it confirms your mod is being loaded.
+    </p>
+
+    <h2>The alias_method pattern</h2>
+    <p>
+      The most common pattern: monkey-patch an existing game class without breaking its
+      behavior. Use <code>alias_method</code> to keep the original method around, redefine the
+      method, call the original, then add your own logic.
+    </p>
+<pre><code>class Game_Player
+  alias_method :_my_orig_increase_steps, :increase_steps
+  def increase_steps
+    _my_orig_increase_steps                # call the original
+    if $game_party
+      $game_party.gain_gold(5) rescue nil  # add 5 souls per step
+    end
+  end
+end
+
+ModLoader.log("[my_mod] hooked Game_Player#increase_steps") rescue nil</code></pre>
+
+    <p>
+      Three principles to follow:
+    </p>
+    <ul>
+      <li>Use a unique alias prefix (e.g. <code>_my_</code>) so you don't collide with another mod that hooks the same method.</li>
+      <li>Always call the aliased original — otherwise you replace base behavior, not extend it.</li>
+      <li>Wrap risky operations in <code>rescue nil</code>. If your mod throws, the loader catches it, but the rest of the game shouldn't be left in a half-modified state.</li>
+    </ul>
+
+    <h2>Tweaking the database</h2>
+    <p>
+      The game's data tables are exposed as global arrays — <code>$data_items</code>,
+      <code>$data_weapons</code>, <code>$data_armors</code>, <code>$data_skills</code>,
+      <code>$data_enemies</code>, <code>$data_classes</code>, <code>$data_states</code>,
+      <code>$data_actors</code>, <code>$data_troops</code>. They're all 1-indexed (entry 0 is nil).
+    </p>
+<pre><code># Mods/strong_potions/main.rb
+($data_items || []).each do |item|
+  next unless item && item.itype_id == 1   # 1 = Regular item, 2 = Key item
+  item.price = 1
+  # Replace effects with "recover all HP"
+  item.effects = [RPG::UsableItem::Effect.new(11, 0, 1.0, 0)]
+end
+
+ModLoader.log("[strong_potions] juiced every consumable") rescue nil</code></pre>
+
+    <p>
+      These changes are in-memory. They take effect immediately, last until the game closes,
+      and don't touch your save file.
+    </p>
+
+    <h2>Hooking scenes</h2>
+    <p>
+      Scenes (<code>Scene_Map</code>, <code>Scene_Battle</code>, <code>Scene_Menu</code>, …)
+      have <code>start</code>, <code>update</code>, and <code>terminate</code> lifecycle methods
+      you can hook for overlays, custom HUDs, hotkeys, etc.
+    </p>
+<pre><code># Mods/coord_hud/main.rb
+class Scene_Map
+  alias_method :_my_orig_start, :start
+  alias_method :_my_orig_update, :update
+
+  def start
+    _my_orig_start
+    @_my_sprite = Sprite.new
+    @_my_sprite.bitmap = Bitmap.new(220, 28)
+    @_my_sprite.x = 8; @_my_sprite.y = 8; @_my_sprite.z = 9999
+  end
+
+  def update
+    _my_orig_update
+    return unless @_my_sprite && @_my_sprite.bitmap && $game_player
+    @_my_sprite.bitmap.clear
+    @_my_sprite.bitmap.draw_text(0, 0, 220, 28,
+      "Map #{$game_map.map_id}  (#{$game_player.x},#{$game_player.y})")
+  end
+end</code></pre>
+
+    <p>
+      For a more complete example see the <code>05_scene_hook</code> template — it adds a
+      cleanup step in <code>terminate</code> so the sprite is disposed properly when leaving
+      the map.
+    </p>
+
+    <h2>Replacing assets</h2>
+    <p>
+      For graphic / audio / data file replacement, you don't need any Ruby code at all.
+      See the <a href="asset-overrides.html">Asset Overrides</a> page — drop a PNG into
+      <code>assets/Graphics/Faces/</code> and you're done.
+    </p>
+
+    <h2>Where to find class and method names</h2>
+    <p>
+      Black Souls II ships with 224 scripts; many of them are heavily customized vanilla
+      RPG Maker scripts plus BS2-specific systems (covenants, symbol enemies, region passing,
+      etc.). To hook the right method you need to know what's actually defined.
+    </p>
+    <p>
+      Run the recon tool that comes with the source repo:
+    </p>
+<pre><code>cd "Mod Loader/src"
+python recon.py</code></pre>
+    <p>
+      It dumps every script under <code>docs/recon/scripts/</code> as readable Ruby and
+      auto-generates a <code>DOCUMENTATION.md</code> indexing every class, module, method,
+      and constant the live game defines. That's the canonical reference for naming things.
+    </p>
+
+    <h2>Logging</h2>
+    <p>
+      Use <code>ModLoader.log("[your_mod] message")</code> to write to the loader's log files.
+      Wrap calls in <code>rescue nil</code> so a missing loader (e.g. when running outside the
+      patched game) doesn't break your mod.
+    </p>
+
+    <p>Log files written:</p>
+    <ul>
+      <li><code>BLACK SOULS II/Mods/_loader.log</code></li>
+      <li><code>BLACK SOULS II/bs_modloader.log</code></li>
+      <li><code>%TEMP%/bs_modloader.log</code></li>
+    </ul>
+
+    <div class="note">
+      <strong>Tip:</strong> if a mod doesn't seem to load, the loader's MessageBox at startup
+      tells you which mods loaded and which threw exceptions. Per-mod errors are caught and
+      reported individually.
+    </div>
+
+  </main>
+
+</div>
+
+<footer class="site">
+  Black Souls Mod Loader · MIT License
+</footer>
+
+</body>
+</html>

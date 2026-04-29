@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Installation — Black Souls Mod Loader</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>BLACK SOULS MOD LOADER</h1>
+  <p class="subtitle">— a vessel for many hands —</p>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <h2>Overview</h2>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="installation.html" class="active">Installation</a></li>
+      <li><a href="how-it-works.html">How it works</a></li>
+    </ul>
+    <h2>Mod Authoring</h2>
+    <ul>
+      <li><a href="creating-mods.html">Creating mods</a></li>
+      <li><a href="asset-overrides.html">Asset overrides</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API reference</a></li>
+    </ul>
+    <h2>Tools</h2>
+    <ul>
+      <li><a href="asset-extractor.html">Asset Extractor</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <h1>Installation</h1>
+    <p class="lede">Two routes — pre-built executable for end users, build-from-source for developers.</p>
+
+    <h2>Option A — pre-built executable</h2>
+    <p>Recommended for most users.</p>
+
+    <ol>
+      <li>Go to the project's GitHub <strong>Releases</strong> page.</li>
+      <li>Download <code>BlackSoulsModLoader.exe</code>.</li>
+      <li>Run it. Windows may flag it as "unknown publisher" — click <em>More info → Run anyway</em>.
+          The exe is unsigned because PyInstaller binaries don't ship with a signing certificate.</li>
+      <li>In the GUI, click <strong>Browse</strong> next to <em>Game folder</em> and pick your
+          <code>BLACK SOULS II</code> folder — the one containing <code>Game.exe</code> and
+          <code>Game.rgss3a</code>.</li>
+      <li>Click <strong>Install / Update</strong>. The status line should turn green and read
+          <em>archive XXX MB · LOADER INSTALLED · backup: yes</em>.</li>
+      <li>Close the loader window. Launch the game. You should see a <code>BS_ModLoader</code>
+          MessageBox briefly at startup confirming the loader is running.</li>
+    </ol>
+
+    <div class="card">
+      <h3>What just happened</h3>
+      <p>
+        The loader made an automatic backup of <code>Game.rgss3a</code> at
+        <code>Game.rgss3a.original.bak</code>, then patched the original to inject a tiny
+        Ruby script that scans the new <code>Mods/</code> folder at startup. Re-running the
+        installer always re-derives from the backup, so it's safe to install over and over.
+      </p>
+    </div>
+
+    <h2>Option B — build from source</h2>
+    <p>For developers, contributors, or anyone modifying the loader itself.</p>
+
+    <h3>Requirements</h3>
+    <ul>
+      <li>Python 3.8 or newer on PATH</li>
+      <li>Two pip packages: <code>PyInstaller</code> and <code>PyQt6</code></li>
+    </ul>
+
+    <h3>Install dependencies (one-time)</h3>
+<pre><code>pip install PyInstaller PyQt6</code></pre>
+
+    <h3>Build the executable</h3>
+<pre><code>cd "Mod Loader/src"
+pyinstaller --noconfirm --clean --onefile --windowed \
+            --name "BlackSoulsModLoader" \
+            --icon "square-image.ico" \
+            --add-data "loader.rb;." \
+            --add-data "square-image.ico;." \
+            mod_loader_gui.py</code></pre>
+
+    <p>
+      Output: <code>src/dist/BlackSoulsModLoader.exe</code>. Single-file executable, no install
+      required. <code>loader.rb</code> and the icon are embedded in the exe via the
+      <code>--add-data</code> flags.
+    </p>
+
+    <p>
+      A convenience <code>build.bat</code> runs the exact same command — on Windows you can
+      double-click it instead of typing the PyInstaller invocation.
+    </p>
+
+    <h3>Run from source (no exe build)</h3>
+    <p>If you only want to test changes without packaging:</p>
+<pre><code>pip install PyQt6
+cd "Mod Loader/src"
+python mod_loader_gui.py</code></pre>
+
+    <h2>Uninstalling</h2>
+    <p>
+      Two equivalent ways:
+    </p>
+    <ul>
+      <li><strong>GUI:</strong> launch <code>BlackSoulsModLoader.exe</code>, pick the same game folder, click <strong>Uninstall</strong>.</li>
+      <li><strong>CLI:</strong> <code>cd "Mod Loader/src" && python uninstall.py</code></li>
+    </ul>
+    <p>
+      Both restore <code>Game.rgss3a</code> from <code>Game.rgss3a.original.bak</code>. Your
+      <code>BLACK SOULS II/Mods/</code> folder is preserved — uninstalling only reverts the patch,
+      not your installed mods.
+    </p>
+
+    <h2>Troubleshooting</h2>
+
+    <h3>The status line says "NOT a valid game folder"</h3>
+    <p>
+      The folder you picked doesn't contain <code>Game.rgss3a</code>. Common cause: you picked
+      the parent folder. Open the folder you selected — if you see <code>Game.exe</code> alongside,
+      you're in the right place. If <code>Game.exe</code> is in a subfolder, pick that subfolder
+      instead.
+    </p>
+
+    <h3>The game won't start after install</h3>
+    <p>
+      Run the uninstaller to restore the backup. If the game starts again from the backup, the
+      patch was the cause — file a bug report with whatever error message the game showed.
+    </p>
+
+    <h3>I see no MessageBox at startup, mods don't load</h3>
+    <p>
+      Check <code>%TEMP%/bs_modloader.log</code> and <code>BLACK SOULS II/Mods/_loader.log</code>
+      for entries. If both are empty, the patch may not have taken effect — re-run the installer
+      and try again. If the log says <code>No Mods/ directory found</code>, create
+      <code>BLACK SOULS II/Mods/</code> manually.
+    </p>
+
+  </main>
+
+</div>
+
+<footer class="site">
+  Black Souls Mod Loader · MIT License
+</footer>
+
+</body>
+</html>

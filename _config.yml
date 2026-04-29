@@ -1,0 +1,9 @@
+# Tell GitHub Pages this is a plain HTML site -- don't run Jekyll.
+# That way our raw .html files are served as-is without any markdown
+# conversion or templating layer in the way.
+plugins: []
+include:
+  - "*.html"
+  - "*.css"
+exclude:
+  - README.md

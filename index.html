@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Souls Mod Loader — Documentation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>BLACK SOULS MOD LOADER</h1>
+  <p class="subtitle">— a vessel for many hands —</p>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <h2>Overview</h2>
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="pages/installation.html">Installation</a></li>
+      <li><a href="pages/how-it-works.html">How it works</a></li>
+    </ul>
+    <h2>Mod Authoring</h2>
+    <ul>
+      <li><a href="pages/creating-mods.html">Creating mods</a></li>
+      <li><a href="pages/asset-overrides.html">Asset overrides</a></li>
+      <li><a href="pages/templates.html">Templates</a></li>
+      <li><a href="pages/api-reference.html">API reference</a></li>
+    </ul>
+    <h2>Tools</h2>
+    <ul>
+      <li><a href="pages/asset-extractor.html">Asset Extractor</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <h1>Black Souls Mod Loader</h1>
+    <p class="lede">A modding framework for <em>Black Souls II</em> — RPG Maker VX Ace, RGSS3, Ruby 1.9.</p>
+
+    <p>
+      The mod loader patches <code>Game.rgss3a</code> so the game loads custom Ruby mods
+      (and their assets) from <code>BLACK SOULS II/Mods/&lt;your_mod&gt;/</code> at startup. Drop a
+      folder, ship a mod. Replace any graphic or audio file by putting it in the mod's
+      <code>assets/</code> subfolder. Hook any class, override any scene, change the game.
+    </p>
+
+    <div class="tile-grid">
+      <div class="tile">
+        <a href="pages/installation.html">
+          <h3>INSTALLATION</h3>
+          <p>Download the .exe, pick your game folder, click Install.</p>
+        </a>
+      </div>
+      <div class="tile">
+        <a href="pages/creating-mods.html">
+          <h3>CREATING MODS</h3>
+          <p>Folder structure, <code>main.rb</code>, the alias_method pattern.</p>
+        </a>
+      </div>
+      <div class="tile">
+        <a href="pages/asset-overrides.html">
+          <h3>ASSET OVERRIDES</h3>
+          <p>Replace any image / audio / data file via <code>assets/</code>.</p>
+        </a>
+      </div>
+      <div class="tile">
+        <a href="pages/templates.html">
+          <h3>TEMPLATES</h3>
+          <p>Five starter mods showing common patterns.</p>
+        </a>
+      </div>
+      <div class="tile">
+        <a href="pages/api-reference.html">
+          <h3>API REFERENCE</h3>
+          <p>What the loader exposes — <code>ModLoader.log</code>, hooks, etc.</p>
+        </a>
+      </div>
+      <div class="tile">
+        <a href="pages/asset-extractor.html">
+          <h3>ASSET EXTRACTOR</h3>
+          <p>Standalone GUI to dump and repack <code>Game.rgss3a</code>.</p>
+        </a>
+      </div>
+    </div>
+
+    <h2>Quick start</h2>
+    <ol>
+      <li>Download <code>BlackSoulsModLoader.exe</code> from the GitHub Releases page.</li>
+      <li>Run it.</li>
+      <li>Click <strong>Browse</strong> and pick your <code>BLACK SOULS II</code> folder
+          (the folder containing <code>Game.exe</code> and <code>Game.rgss3a</code>).</li>
+      <li>Click <strong>Install / Update</strong>.</li>
+      <li>Launch the game. Drop mods into <code>BLACK SOULS II/Mods/&lt;your_mod&gt;/</code>.</li>
+    </ol>
+
+    <p>
+      To uninstall: launch the .exe again, pick the same folder, click <strong>Uninstall</strong>.
+      The original <code>Game.rgss3a</code> is restored from its automatic backup. Your <code>Mods/</code>
+      folder is preserved.
+    </p>
+
+    <h2>What's in the box</h2>
+    <p>The full project ships as three independent pieces:</p>
+    <ul>
+      <li><strong>Mod Loader</strong> — the patcher and its GUI; produces <code>BlackSoulsModLoader.exe</code>.</li>
+      <li><strong>Asset Extractor</strong> — a separate tool that dumps and repacks <code>Game.rgss3a</code>; produces <code>BlackSoulsAssetExtractor.exe</code>.</li>
+      <li><strong>This documentation site</strong> — the pages you're reading now.</li>
+    </ul>
+
+    <div class="note">
+      <strong>New to RGSS3 modding?</strong> The <a href="pages/how-it-works.html">How it works</a> page
+      explains the archive format, why a loader is needed at all, and what the patch actually does
+      to <code>Game.rgss3a</code>.
+    </div>
+
+  </main>
+
+</div>
+
+<footer class="site">
+  Black Souls Mod Loader · MIT License · documentation generated for community use
+</footer>
+
+</body>
+</html>

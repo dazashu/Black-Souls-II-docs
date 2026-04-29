@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Reference — Black Souls Mod Loader</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>BLACK SOULS MOD LOADER</h1>
+  <p class="subtitle">— a vessel for many hands —</p>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <h2>Overview</h2>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="how-it-works.html">How it works</a></li>
+    </ul>
+    <h2>Mod Authoring</h2>
+    <ul>
+      <li><a href="creating-mods.html">Creating mods</a></li>
+      <li><a href="asset-overrides.html">Asset overrides</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html" class="active">API reference</a></li>
+    </ul>
+    <h2>Tools</h2>
+    <ul>
+      <li><a href="asset-extractor.html">Asset Extractor</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <h1>API reference</h1>
+    <p class="lede">What the loader exposes to your <code>main.rb</code>, plus the most useful global game objects.</p>
+
+    <h2>The <code>ModLoader</code> module</h2>
+    <p>
+      The loader itself runs as a module called <code>ModLoader</code>. Your mod can call into
+      it for logging, asset lookup, and to inspect what other mods loaded.
+    </p>
+
+    <h3><code>ModLoader.log(msg)</code></h3>
+    <p>
+      Writes <code>msg</code> to every active log file with a timestamp. Returns nil. Always
+      wrap in <code>rescue nil</code> in case your mod is ever loaded outside the patched game.
+    </p>
+<pre><code>ModLoader.log("[my_mod] booted, hooked 3 classes") rescue nil</code></pre>
+
+    <h3><code>ModLoader.loaded</code></h3>
+    <p>Array of folder names of mods that loaded successfully this session.</p>
+
+    <h3><code>ModLoader.errors</code></h3>
+    <p>Array of <code>[mod_name, exception]</code> tuples for mods that threw during load.</p>
+
+    <h3><code>ModLoader.find_asset_override(path)</code></h3>
+    <p>
+      Returns the absolute file system path of an asset override registered by some mod, or
+      <code>nil</code> if no mod overrides this path. Useful if you're writing a mod that wants
+      to compose with another mod's overrides.
+    </p>
+<pre><code>full = ModLoader.find_asset_override("Graphics/Faces/Alice")
+# =&gt; "C:/.../Mods/skin_pack/assets/Graphics/Faces/Alice.png"
+# or nil if no mod claims it</code></pre>
+
+    <h3><code>ModLoader.asset_overrides</code></h3>
+    <p>The full hash of <code>relative_path =&gt; absolute_path</code>. Read-only — don't mutate.</p>
+
+    <hr>
+
+    <h2>Useful RGSS3 globals</h2>
+
+    <h3><code>$game_party</code></h3>
+    <p>
+      The active party. Members are <code>Game_Actor</code> instances; the array is
+      <code>$game_party.members</code>.
+    </p>
+    <table>
+      <thead><tr><th>Method</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>members</code></td><td>Array of party actors.</td></tr>
+        <tr><td><code>gold</code></td><td>Current souls.</td></tr>
+        <tr><td><code>gain_gold(n)</code></td><td>Add <code>n</code>. Negative subtracts.</td></tr>
+        <tr><td><code>lose_gold(n)</code></td><td>Subtract <code>n</code>.</td></tr>
+        <tr><td><code>gain_item(item, n)</code></td><td><code>item</code> is an RPG::Item / Weapon / Armor.</td></tr>
+        <tr><td><code>lose_item(item, n)</code></td><td>—</td></tr>
+        <tr><td><code>item_number(item)</code></td><td>How many of that item we own.</td></tr>
+        <tr><td><code>add_actor(id) / remove_actor(id)</code></td><td>Modify roster.</td></tr>
+      </tbody>
+    </table>
+
+    <h3><code>$game_player</code></h3>
+    <p>The on-map player avatar (a <code>Game_Player</code>).</p>
+    <table>
+      <thead><tr><th>Method / attr</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>x</code> / <code>y</code></td><td>Tile coords.</td></tr>
+        <tr><td><code>direction</code></td><td>2 down / 4 left / 6 right / 8 up.</td></tr>
+        <tr><td><code>reserve_transfer(map_id, x, y, dir)</code></td><td>Teleport to another map.</td></tr>
+        <tr><td><code>@through</code> (ivar)</td><td>Set true to walk through walls. BS2 strips the public setter; use <code>$game_player.instance_variable_set(:@through, true)</code>.</td></tr>
+        <tr><td><code>increase_steps</code></td><td>Hooked by the <code>01_simple_ruby</code> template — runs on every move.</td></tr>
+      </tbody>
+    </table>
+
+    <h3><code>$game_map</code></h3>
+    <table>
+      <thead><tr><th>Method</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>map_id</code></td><td>Current map ID.</td></tr>
+        <tr><td><code>refresh</code></td><td>Re-evaluate all events on the map.</td></tr>
+        <tr><td><code>passable?(x, y, d)</code></td><td>Tile passability.</td></tr>
+        <tr><td><code>events</code></td><td>Hash <code>{event_id =&gt; Game_Event}</code>.</td></tr>
+      </tbody>
+    </table>
+
+    <h3><code>$game_switches[id]</code> and <code>$game_variables[id]</code></h3>
+    <p>RPG Maker switch and variable tables. 1-indexed. <code>$game_switches[1] = true</code> flips story flag #1.</p>
+
+    <h3><code>$data_*</code></h3>
+    <p>The database arrays. 1-indexed (entry 0 is nil).</p>
+    <ul>
+      <li><code>$data_items</code> — RPG::Item (consumables, key items)</li>
+      <li><code>$data_weapons</code> — RPG::Weapon</li>
+      <li><code>$data_armors</code> — RPG::Armor</li>
+      <li><code>$data_skills</code> — RPG::Skill</li>
+      <li><code>$data_enemies</code> — RPG::Enemy</li>
+      <li><code>$data_classes</code> — RPG::Class</li>
+      <li><code>$data_states</code> — RPG::State</li>
+      <li><code>$data_actors</code> — RPG::Actor</li>
+      <li><code>$data_troops</code> — RPG::Troop</li>
+      <li><code>$data_mapinfos</code> — Hash <code>{map_id =&gt; RPG::MapInfo}</code></li>
+      <li><code>$data_system</code> — RPG::System (game title, switches/variables names, sounds, etc.)</li>
+      <li><code>$data_common_events</code> — Array of common events</li>
+    </ul>
+
+    <h3><code>SceneManager</code></h3>
+    <table>
+      <thead><tr><th>Method</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>SceneManager.call(SomeScene)</code></td><td>Push a new scene; current scene returns when the new one finishes.</td></tr>
+        <tr><td><code>SceneManager.return</code></td><td>Pop back to the previous scene.</td></tr>
+        <tr><td><code>SceneManager.scene_is?(SomeClass)</code></td><td>Type check on the active scene.</td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <h2>BS2-specific systems</h2>
+
+    <h3><code>KURE::ShortMove::MOVE_LIST</code></h3>
+    <p>
+      The bonfire / fast-travel destination list. Array of <code>[label_meta, target]</code>
+      pairs where <code>target</code> is <code>[map_id, x, y, dir]</code>. Used by the
+      <code>creative_mode</code> mod's teleport menu.
+    </p>
+<pre><code>KURE::ShortMove::MOVE_LIST.each do |entry|
+  next unless entry.is_a?(Array) && entry.size &gt;= 2
+  name = entry[0].is_a?(Array) ? entry[0][0].to_s : entry[0].to_s
+  map_id, x, y, dir = entry[1]
+  # ... use the destination
+end</code></pre>
+
+    <h3><code>Spirits</code> and <code>Spirits::Features</code></h3>
+    <p>
+      BS2's covenant / partner system. <code>Spirits.actor_id(spirit_id)</code> maps a spirit ID
+      to the corresponding actor ID. <code>Scene_EditPartner</code> opens the partner-change UI.
+    </p>
+
+    <hr>
+
+    <h2>Class / method discovery</h2>
+    <p>
+      Don't memorize the BS2 class hierarchy — generate it. The recon tool dumps every script
+      in the game and produces an auto-indexed reference:
+    </p>
+<pre><code>cd "Mod Loader/src"
+python recon.py</code></pre>
+    <p>
+      Output: <code>docs/recon/scripts/*.rb</code> (224 readable Ruby files) and
+      <code>docs/recon/DOCUMENTATION.md</code> (every class, module, method, and constant
+      indexed by which script defines it).
+    </p>
+
+  </main>
+
+</div>
+
+<footer class="site">
+  Black Souls Mod Loader · MIT License
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works — Black Souls Mod Loader</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>BLACK SOULS MOD LOADER</h1>
+  <p class="subtitle">— a vessel for many hands —</p>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <h2>Overview</h2>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="how-it-works.html" class="active">How it works</a></li>
+    </ul>
+    <h2>Mod Authoring</h2>
+    <ul>
+      <li><a href="creating-mods.html">Creating mods</a></li>
+      <li><a href="asset-overrides.html">Asset overrides</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API reference</a></li>
+    </ul>
+    <h2>Tools</h2>
+    <ul>
+      <li><a href="asset-extractor.html">Asset Extractor</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <h1>How it works</h1>
+    <p class="lede">A walkthrough of what the mod loader actually does to <code>Game.rgss3a</code>, and why.</p>
+
+    <h2>Why a loader is needed at all</h2>
+    <p>
+      Black Souls II runs on <strong>RPG Maker VX Ace</strong>, which uses the RGSS3 runtime
+      and ships its scripts as Ruby 1.9 source code <strong>baked into a single encrypted
+      archive</strong> (<code>Game.rgss3a</code>). The runtime DLL (<code>RGSS301.dll</code>)
+      reads that archive at startup, deserializes the script blob, and <code>eval</code>s every
+      script <em>before any user code can run</em>.
+    </p>
+    <p>
+      Vanilla RPG Maker has no plugin system, no <code>require</code> from external files,
+      no hot-reload. If you want to change a single line of code in the game, the conventional
+      workflow is:
+    </p>
+    <ol>
+      <li>Decrypt <code>Game.rgss3a</code> with a third-party tool.</li>
+      <li>Open <code>Scripts.rvdata2</code> in the RPG Maker VX Ace editor (or with <code>rvpacker</code>).</li>
+      <li>Edit the script.</li>
+      <li>Repack everything back into a new <code>Game.rgss3a</code>.</li>
+    </ol>
+    <p>
+      Every change requires re-extracting and re-packing. Multiple mods can't coexist. There's
+      no concept of "drop a folder, it works."
+    </p>
+    <p>
+      The mod loader fixes this by injecting a single Ruby script into the archive — a
+      <em>bootstrap</em> — that runs at game startup, scans an external <code>Mods/</code>
+      directory, and <code>eval</code>s any <code>main.rb</code> files it finds at the top
+      level. After the bootstrap, the rest is regular Ruby — modders can monkey-patch any
+      class, hook any scene, replace any asset, all from a folder of <code>.rb</code> files.
+    </p>
+
+    <h2>The archive format (RGSS3A v3)</h2>
+    <p>
+      <code>Game.rgss3a</code> is a simple XOR-encrypted container with the following layout:
+    </p>
+<pre><code>+-- header (8 bytes) ----------+
+|  "RGSSAD\0\3"                |
++-- base_key (4 bytes LE) -----+
+|  derived: key = (base_key * 9 + 3) &amp; 0xFFFFFFFF
++-- entry table --------------+
+|  for each file:             |
+|    offset    (4 bytes XOR key)
+|    size      (4 bytes XOR key)
+|    file_key  (4 bytes XOR key)
+|    name_len  (4 bytes XOR key)
+|    name      (name_len bytes XOR shifted-key)
+|  terminator: 4 bytes that XOR to 0
++-- file data ----------------+
+|  each file's bytes encrypted with its own file_key,
+|  XORed in 4-byte chunks; key advances per chunk
++----------------------------+</code></pre>
+
+    <p>
+      The encryption is symmetric XOR, so the same routine encrypts and decrypts. The format
+      doesn't have a directory tree — paths are stored as full strings ("Graphics/Faces/Alice.png").
+    </p>
+
+    <h2>What's inside <code>Scripts.rvdata2</code></h2>
+    <p>
+      The script blob is a Ruby <code>Marshal.dump</code> of an Array of three-tuples:
+    </p>
+<pre><code>[
+  [section_id_1, name_1, zlib_deflated_source_1],
+  [section_id_2, name_2, zlib_deflated_source_2],
+  ...
+]</code></pre>
+    <p>
+      <code>section_id</code> is a 32-bit (sometimes Bignum) random number used internally by
+      the editor. <code>name</code> is a UTF-8 string with the script's title. <code>source</code>
+      is the Ruby source compressed with zlib.
+    </p>
+    <p>
+      RGSS3 inflates each entry and <code>eval</code>s it in order. The very last entry is
+      conventionally named <strong>Main</strong> and contains the line that boots the game:
+    </p>
+<pre><code>rgss_main { SceneManager.run }</code></pre>
+
+    <h2>Where the loader gets injected</h2>
+    <p>
+      We inject a new entry — <code>BS_ModLoader</code> — at <em>position N-1</em>, immediately
+      <strong>before Main</strong>. By the time it runs, every game class has already been
+      defined, so the loader can monkey-patch them and call <code>Cache</code>, <code>Audio</code>,
+      etc. without import order issues. Then <code>Main</code> runs and <code>SceneManager.run</code>
+      starts the game with the loader's hooks already in place.
+    </p>
+
+    <h2>What the installer does, step by step</h2>
+    <ol>
+      <li><strong>Backup</strong> — copy the pristine <code>Game.rgss3a</code> to <code>Game.rgss3a.original.bak</code> (only on first install).</li>
+      <li><strong>Restore from backup</strong> — every subsequent install starts by copying the backup back over <code>Game.rgss3a</code>, so we always patch a clean archive.</li>
+      <li><strong>Decrypt</strong> the archive in memory and find the entry for <code>Data/Scripts.rvdata2</code>.</li>
+      <li><strong>Walk the Marshal blob</strong> — locate every script entry's byte boundaries.</li>
+      <li><strong>Compress <code>loader.rb</code></strong> with zlib at the maximum compression level.</li>
+      <li><strong>Build a new entry</strong> — Marshal-encode <code>[12345678, "BS_ModLoader", deflated_loader_bytes]</code>.</li>
+      <li><strong>Splice</strong> the new entry between the second-to-last and last script.</li>
+      <li><strong>Re-encrypt</strong> the patched <code>Scripts.rvdata2</code> with the original file_key.</li>
+      <li><strong>Append</strong> the encrypted bytes to the end of <code>Game.rgss3a</code>.</li>
+      <li><strong>Rewrite the entry-table pointer</strong> for <code>Scripts.rvdata2</code> to point to the new offset and size at the end of the archive.</li>
+    </ol>
+    <p>
+      The original <code>Scripts.rvdata2</code> bytes inside the archive become unreferenced
+      dead bytes — harmless and never read. The whole patch grows the file by approximately
+      the size of the inflated loader (about 1 KB compressed).
+    </p>
+
+    <h2>What <code>loader.rb</code> does at runtime</h2>
+    <ol>
+      <li><strong>Discover</strong> the <code>Mods/</code> folder. Tries the current working directory, parent, and a few sensible fallbacks.</li>
+      <li><strong>Register asset overrides</strong> — walks every <code>Mods/&lt;mod&gt;/assets/**/*</code> and builds a hash of <code>relative_path =&gt; absolute_path</code>.</li>
+      <li><strong>Install asset hooks</strong> — monkey-patches <code>Cache.normal_bitmap</code>, <code>Kernel#load_data</code>, and <code>Audio.bgm_play</code> (plus its siblings) so reads check the override map first.</li>
+      <li><strong>Load each mod</strong> — reads <code>Mods/&lt;mod&gt;/main.rb</code>, strips a UTF-8 BOM if present, and <code>eval</code>s it at <code>TOPLEVEL_BINDING</code>. Per-mod exceptions are caught and reported.</li>
+      <li><strong>Show a summary MessageBox</strong> with the mod count and any errors.</li>
+    </ol>
+    <p>
+      All of this happens in roughly 10–50 ms. The MessageBox is the only visible side effect
+      at game launch.
+    </p>
+
+    <h2>Why this approach is safe</h2>
+    <ul>
+      <li>The original archive is preserved as <code>Game.rgss3a.original.bak</code>. Uninstalling restores it bit-for-bit.</li>
+      <li>Re-running the installer always re-derives from the backup. No accumulation, no growing files, no double-patches.</li>
+      <li>The patch only adds one script and rewrites two 4-byte pointers in the entry table. No existing game logic is rewritten or removed.</li>
+      <li>Mods are <code>eval</code>'d in <code>begin/rescue</code>; one bad mod can't crash the loader or the rest of the mods.</li>
+      <li>Asset overrides are non-destructive — they intercept reads but never modify the archive.</li>
+    </ul>
+
+    <h2>Why some operations need to be careful</h2>
+    <p>
+      BS2 customizes a number of vanilla RPG Maker classes — <code>Game_CharacterBase</code>,
+      <code>Game_Player</code>, <code>Window_Command</code>, <code>Window_Selectable</code>,
+      and several scene classes — in non-trivial ways. The loader's hooks have to coexist with
+      those customizations. Some patterns to watch out for as a mod author:
+    </p>
+    <ul>
+      <li>BS2's <code>Game_CharacterBase</code> doesn't expose a <code>through=</code> setter even though <code>@through</code> exists. Use <code>instance_variable_set(:@through, true)</code> to drive noclip.</li>
+      <li>BS2's <code>Window_Command</code> doesn't tolerate calling <code>clear_command_list</code> + <code>create_contents</code> while the window is active in some contexts. Deactivate before refreshing.</li>
+      <li>Several BS2 scripts <code>alias_method</code> the same vanilla methods (e.g. <code>passable?</code> is hooked by region-passing AND symbol enemies AND vanilla). Adding another alias on top usually works, but exotic state changes can confuse the chain — prefer setting an ivar directly when a clean alternative exists.</li>
+    </ul>
+
+    <p>
+      The bundled <code>creative_mode</code> mod is the canonical example of working through
+      these constraints — see its <code>main.rb</code> for production-quality versions of every
+      pattern.
+    </p>
+
+  </main>
+
+</div>
+
+<footer class="site">
+  Black Souls Mod Loader · MIT License
+</footer>
+
+</body>
+</html>

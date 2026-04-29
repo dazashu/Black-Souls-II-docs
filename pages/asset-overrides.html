@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Overrides — Black Souls Mod Loader</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site">
+  <h1>BLACK SOULS MOD LOADER</h1>
+  <p class="subtitle">— a vessel for many hands —</p>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <h2>Overview</h2>
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="how-it-works.html">How it works</a></li>
+    </ul>
+    <h2>Mod Authoring</h2>
+    <ul>
+      <li><a href="creating-mods.html">Creating mods</a></li>
+      <li><a href="asset-overrides.html" class="active">Asset overrides</a></li>
+      <li><a href="templates.html">Templates</a></li>
+      <li><a href="api-reference.html">API reference</a></li>
+    </ul>
+    <h2>Tools</h2>
+    <ul>
+      <li><a href="asset-extractor.html">Asset Extractor</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <h1>Asset overrides</h1>
+    <p class="lede">Replace any image, audio file, or data table by dropping a file into your mod's <code>assets/</code> folder.</p>
+
+    <h2>The basic idea</h2>
+    <p>
+      The loader scans every <code>Mods/&lt;mod&gt;/assets/</code> at startup and hooks the
+      game's asset-loading pipeline so reads are redirected to your replacement file before
+      they ever touch <code>Game.rgss3a</code>. Original assets are never modified.
+    </p>
+
+    <h2>Folder layout</h2>
+    <p>
+      Mirror the archive's tree under <code>assets/</code>. The path inside <code>assets/</code>
+      is what the game uses as the asset's name.
+    </p>
+<pre><code>Mods/&lt;your_mod&gt;/
+└── assets/
+    ├── Graphics/
+    │   ├── Faces/&lt;name&gt;.png             replaces a face graphic
+    │   ├── Characters/&lt;name&gt;.png        replaces a sprite sheet
+    │   ├── Pictures/&lt;name&gt;.png          replaces a CG / event picture
+    │   ├── System/&lt;name&gt;.png            replaces system UI (window skin, etc.)
+    │   ├── Battlebacks1/&lt;name&gt;.png      battle background floor
+    │   ├── Battlebacks2/&lt;name&gt;.png      battle background ceiling
+    │   ├── Parallaxes/&lt;name&gt;.png        map parallax
+    │   └── Animations/&lt;name&gt;.png        animation cells
+    ├── Audio/
+    │   ├── BGM/&lt;name&gt;.ogg               music track
+    │   ├── BGS/&lt;name&gt;.ogg               background sound
+    │   ├── ME/&lt;name&gt;.ogg                music effect (victory, etc.)
+    │   └── SE/&lt;name&gt;.ogg                sound effect
+    └── Data/
+        └── &lt;name&gt;.rvdata2               replaces a database file (advanced)</code></pre>
+
+    <h2>Finding the original filename</h2>
+    <p>
+      Asset names in BS2 match what's in <code>Game.rgss3a</code>. To browse them:
+    </p>
+    <ol>
+      <li>Run the <a href="asset-extractor.html">Asset Extractor</a> — pick your game folder, pick an output folder, click <strong>EXTRACT ALL</strong>.</li>
+      <li>Browse the output. The path of any file is exactly the path you'd use in <code>assets/</code>.</li>
+    </ol>
+    <p>
+      Audio files live <em>outside</em> the archive — they're already loose under
+      <code>BLACK SOULS II/Audio/</code>, so you can browse them directly without extracting.
+    </p>
+
+    <h2>Replacing a face graphic</h2>
+    <p>Suppose you want to replace Alice's face. The original lives at <code>Graphics/Faces/Alice.png</code> inside the archive. Drop your edited PNG at:</p>
+<pre><code>Mods/my_mod/assets/Graphics/Faces/Alice.png</code></pre>
+    <p>
+      Restart the game. Anywhere the game shows Alice's face — menus, dialogue boxes, status
+      windows — your version is shown instead. No Ruby code required.
+    </p>
+
+    <h2>Replacing audio</h2>
+<pre><code>Mods/my_mod/assets/Audio/BGM/Theme01.ogg
+Mods/my_mod/assets/Audio/SE/Decision1.ogg</code></pre>
+    <p>
+      Same rule — match the path. Supported formats are whatever the game itself supports
+      (<code>.ogg</code> mostly, sometimes <code>.mp3</code>).
+    </p>
+
+    <h2>Replacing a data table</h2>
+    <p>
+      You can also override <code>.rvdata2</code> files. Use the <a href="asset-extractor.html">Asset Extractor</a> to dump <code>Data/Items.rvdata2</code> (or whichever), edit it (RPG Maker VX Ace editor or a tool like <code>rvpacker</code>), then put the modified file at:
+    </p>
+<pre><code>Mods/my_mod/assets/Data/Items.rvdata2</code></pre>
+    <p>
+      For most data tweaks, <strong>runtime mutation</strong> is easier and safer — see the
+      <code>03_data_tweak</code> template under <a href="templates.html">Templates</a>.
+    </p>
+
+    <h2>How it works under the hood</h2>
+    <p>
+      At boot, the loader walks every <code>Mods/&lt;mod&gt;/assets/**/*</code> path and registers
+      each file as an override keyed by its path relative to <code>assets/</code> (with and without
+      the file extension, since RGSS3 calls <code>Bitmap.new("Graphics/Faces/Alice")</code>
+      without an extension).
+    </p>
+    <p>The loader then installs three hooks:</p>
+    <ul>
+      <li><strong><code>Cache.normal_bitmap</code></strong> — the entry point for all graphics. Checks the override map first, falls back to the archive otherwise.</li>
+      <li><strong><code>Kernel#load_data</code></strong> — used for <code>.rvdata2</code> files. Same pattern.</li>
+      <li><strong><code>Audio.bgm_play</code> / <code>bgs_play</code> / <code>me_play</code> / <code>se_play</code></strong> — same pattern for audio.</li>
+    </ul>
+    <p>
+      Lookups are O(1) hash hits, so there's no measurable performance impact for unmodded
+      assets. The first read of each modded asset costs whatever the file system + Bitmap.new
+      costs (i.e. essentially the same as reading from the archive).
+    </p>
+
+    <div class="note">
+      <strong>Naming gotcha:</strong> RPG Maker is case-sensitive on some assets and
+      case-insensitive on others. To be safe, match the exact case of the original filename
+      from the archive.
+    </div>
+
+    <h2>Conflict resolution</h2>
+    <p>
+      If two mods register an override for the same asset path, the one loaded later wins. Mods
+      are loaded in alphabetical order of folder name, so prefix your folder with a number
+      (e.g. <code>00_my_skin/</code>) to control priority.
+    </p>
+
+  </main>
+
+</div>
+
+<footer class="site">
+  Black Souls Mod Loader · MIT License
+</footer>
+
+</body>
+</html>
